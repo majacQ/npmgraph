@@ -19,10 +19,8 @@
     display: inline-block;
     font-size: 1.8em;
     line-height: 1em;
-    width: 1.3em;
-    padding: 0;
     margin: 0;
-    color: #333;
+    color: var(--text);
     border: solid 1px var(--bg1);
     background: var(--bg0);
     border-radius: var(--rad_sm);
@@ -68,7 +66,6 @@ g.node {
 
   &.selected > text {
     fill: black;
-    font-weight: 600;
   }
 
   &.warning > path {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { QueryLink, Pane, Section, Tags, Tag, ExternalLink } from './Inspector';
 import { human, fetchJSON, simplur, $ } from './util';
-import * as d3 from 'd3';
+import { hierarchy, treemap } from 'd3-hierarchy';
 import '/css/ModulePane.scss';
 
 function ScoreBar({ title, score, style }) {
@@ -15,7 +15,7 @@ function ScoreBar({ title, score, style }) {
 
   return <>
     <span style={{ marginRight: '1em', ...style }}>{title}</span>
-    <div style={{ border: 'solid 1px #ccc', width: '200px' }} >{inner}</div>
+    <div className='score-bar' style={{ border: 'solid 1px #ccc', width: '200px' }} >{inner}</div>
   </>;
 }
 
@@ -29,7 +29,7 @@ function TreeMap({ data, style, ...props }) {
     const { size } = data;
 
     // eslint-disable-next-line no-undef
-    const root = d3.hierarchy(data, ({ dependencySizes: nodes }) => {
+    const root = hierarchy(data, ({ dependencySizes: nodes }) => {
       if (!nodes) return;
 
       const sum = nodes?.reduce((sum, n) => sum + n.approximateSize, 0);
@@ -59,7 +59,7 @@ function TreeMap({ data, style, ...props }) {
       .sort((a, b) => b.value - a.value);
 
     // eslint-disable-next-line no-undef
-    d3.treemap()
+    treemap()
       .size([w, h])
       .padding(0)(root);
 

@@ -1,5 +1,5 @@
 import { graphviz } from '@hpcc-js/wasm';
-import * as d3 from 'd3';
+import { select } from 'd3-selection';
 import React, { useEffect, useState } from 'react';
 import { useLocalStorage } from 'storagehooks';
 import wasmUrl from 'url:@hpcc-js/wasm/dist/graphvizlib.wasm';
@@ -425,7 +425,7 @@ export default function Graph(props) {
 
     // Inject into DOM
     const el = $('#graph');
-    d3.select('#graph svg').remove();
+    select('#graph svg').remove();
     el.appendChild(svgDom);
 
     // Inject bg pattern for deprecated modules
@@ -433,11 +433,11 @@ export default function Graph(props) {
     width="12" height="12"
     patternUnits="userSpaceOnUse"
     patternTransform="rotate(45 50 50)">
-    <line stroke="rgba(192,192,0,.15)" stroke-width="6px" x1="3" x2="3" y2="12"/>
-    <line stroke="rgba(0,0,0,.15)" stroke-width="6px" x1="9" x2="9" y2="12"/>
+    <line stroke="#f6f6e0" stroke-width="6px" x1="3" x2="3" y2="12"/>
+    <line stroke="#d9d9d9" stroke-width="6px" x1="9" x2="9" y2="12"/>
     </pattern>`;
 
-    d3.select('#graph svg')
+    select('#graph svg')
       .insert('defs', ':first-child')
       .html(PATTERN);
 
@@ -473,7 +473,7 @@ export default function Graph(props) {
       }
     }
 
-    d3.select('#graph svg .node').node()?.scrollIntoView();
+    select('#graph svg .node').node()?.scrollIntoView();
 
     setGraph(graphModules);
     setPane(graphModules?.size ? 'graph' : 'info');

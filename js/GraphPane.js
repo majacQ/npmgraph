@@ -1,4 +1,8 @@
-import * as d3 from 'd3';
+import { quantize } from 'd3-interpolate';
+import { scaleOrdinal } from 'd3-scale';
+import { interpolateSpectral } from 'd3-scale-chromatic';
+import { select } from 'd3-selection';
+import { arc, pie } from 'd3-shape';
 import React, { useEffect, useRef } from 'react';
 import { useLocalStorage } from 'storagehooks';
 import { useDepIncludes, useExcludes } from './App';
@@ -32,7 +36,7 @@ function PieGraph({ entries, ...props }) {
   useEffect(() => {
     // Chart code from https://observablehq.com/@d3/pie-chart
 
-    const svg = d3.select(svgEl.current);
+    const svg = select(svgEl.current);
 
     // Align SVG view box to actual element dimensions
     const { width, height } = svg.node().getBoundingClientRect();
@@ -41,14 +45,14 @@ function PieGraph({ entries, ...props }) {
     svg.attr('viewBox', `${-w2} ${-h2} ${width} ${height}`);
 
     // Create arcs
-    const arcs = d3.pie()
+    const arcs = pie()
       .value(e => e[1])
       .sort(null)(entries);
 
     // Create colors
-    const color = d3.scaleOrdinal()
+    const color = scaleOrdinal()
       .domain(entries.map(e => e[0]))
-      .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), entries.length).reverse());
+      .range(quantize(t => interpolateSpectral(t * 0.8 + 0.1), entries.length).reverse());
 
     // Render arcs
     svg.append('g')
@@ -58,7 +62,7 @@ function PieGraph({ entries, ...props }) {
       .join('path')
       .attr('fill', e => color(e.data[0]))
       .attr('d',
-        d3.arc()
+        arc()
           .innerRadius(radius / 2)
           .outerRadius(radius)
       )
@@ -67,7 +71,7 @@ function PieGraph({ entries, ...props }) {
     ;
 
     // Render labels
-    const arcLabel = d3.arc().innerRadius(radius * 0.8).outerRadius(radius * 0.8);
+    const arcLabel = arc().innerRadius(radius * 0.8).outerRadius(radius * 0.8);
     svg.append('g')
       .attr('font-family', 'sans-serif')
       .attr('text-anchor', 'middle')
